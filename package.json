@@ -1,0 +1,25 @@
+{
+  "name": "dml-support",
+  "displayName": "dml-support",
+  "description": "DML language support from Windriver's Simics",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.70.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [{
+      "id": "dml",
+      "aliases": ["Simics Device Modeling Language (DML)", "dml"],
+      "extensions": [".dml"],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "dml",
+      "scopeName": "source.dml",
+      "path": "./syntaxes/dml.tmLanguage.json"
+    }]
+  }
+}
