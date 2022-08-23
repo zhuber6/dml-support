@@ -12,7 +12,7 @@
   "contributes": {
     "languages": [{
       "id": "dml",
-      "aliases": ["Simics Device Modeling Language (DML)", "dml"],
+      "aliases": ["Device Modeling Language", "dml"],
       "extensions": [".dml"],
       "configuration": "./language-configuration.json"
     }],

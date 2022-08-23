@@ -3,7 +3,7 @@
         "dml"
     ],
     "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
-    "name": "Simics Device Modeling Language (DML)",
+    "name": "Device Modeling Language",
     "patterns": [
         {
             "include": "#comment"
@@ -121,7 +121,10 @@
                     "include": "#control-import"
                 },
                 {
-                    "include": "#control-underscore"
+                    "include": "#control-parameter"
+                },
+                {
+                    "include": "#control-header"
                 },
                 {
                     "include": "#control-other"
@@ -129,7 +132,7 @@
             ]
         },
         "control-flow": {
-            "match": "\\b(if|else|for|while|do|break|returns?)\\b",
+            "match": "\\b(if|else|for|while|do|break|switch|case|default|returns?)\\b",
             "name": "keyword.control.flow.dml"
         },
         "control-using": {
@@ -140,12 +143,16 @@
             "match": "\\b(import)\\b",
             "name": "keyword.control.import.dml"
         },
-        "control-underscore": {
-            "match": "\\b(_)\\b",
-            "name": "constant.other.underscore.dml"
+        "control-header": {
+            "match": "\\b(header)\\b",
+            "name": "keyword.control.header.dml"
+        },
+        "control-parameter": {
+            "match": "\\b(parameter|documentation|allocate_type|internal|type|configuration)\\b",
+            "name": "keyword.control.parameter.dml"
         },
         "control-other": {
-            "match": "\\b(parameter|loggroup)\\b",
+            "match": "\\b(loggroup|local|log|data|interface|const)\\b",
             "name": "keyword.control.dml"
         },
         "constant": {
@@ -173,6 +180,9 @@
                 },
                 {
                     "include": "#number-hex"
+                },
+                {
+                    "include": "#number-scientific"
                 }
             ]
         },
@@ -183,6 +193,10 @@
         "number-hex": {
             "match": "\\b(0[xX][a-fA-F0-9]+)\\b",
             "name": "constant.numeric.hexadecimal.dml"
+        },
+        "number-scientific": {
+            "match": "\\b(-?[1-9](\\.\\d+)?[Ee][-+]?\\d+)\\b",
+            "name": "constant.numeric.scientific.dml"
         },
         "string": {
             "patterns": [
@@ -204,7 +218,7 @@
             ]
         },
         "type-primitive": {
-            "match": "\\b(char|int\\d*|uint\\d*|bool|local)\\b",
+            "match": "\\b(char|int\\d*|uint\\d*|bool|double|[a-zA-Z0-9_]*_t)\\b",
             "name": "support.type.primitive.dml"
         },
         "global": {
@@ -225,48 +239,54 @@
                     "name": "variable.language.this.dml"
                 },
                 {
-                    "match": "\\b(super)\\b",
-                    "name": "variable.language.super.dml"
+                    "match": "\\b(call)\\b",
+                    "name": "variable.language.call.dml"
                 },
                 {
-                    "match": "\\b(abi)\\b",
-                    "name": "variable.language.builtin.abi.dml"
-                },
-                {
-                    "match": "\\b(tx\\.origin|tx\\.gasprice|msg\\.data|msg\\.sig|msg\\.value)\\b",
-                    "name": "variable.language.transaction.security.dml"
-                },
-                {
-                    "match": "\\b(msg\\.sender|msg|block|tx|now)\\b",
-                    "name": "variable.language.transaction.dml"
+                    "match": "\\b(inline)\\b",
+                    "name": "variable.language.inline.dml"
                 }
             ]
         },
         "global-functions": {
             "patterns": [
                 {
-                    "match": "\\b(require|assert|revert)\\b",
+                    "match": "\\b(assert)\\b",
                     "name": "keyword.control.exceptions.dml"
-                },
-                {
-                    "match": "\\b(SIM_)\\b",
-                    "name": "support.function.math.dml"
                 }
             ]
         },
         "declaration": {
             "patterns": [
                 {
-                    "include": "#declaration-contract"
+                    "include": "#declaration-device"
+                },
+                {
+                    "include": "#declaration-bank"
+                },
+                {
+                    "include": "#declaration-register"
+                },
+                {
+                    "include": "#declaration-field"
+                },
+                {
+                    "include": "#declaration-attribute"
+                },
+                {
+                    "include": "#declaration-template"
                 },
                 {
                     "include": "#declaration-interface"
                 },
                 {
-                    "include": "#declaration-library"
+                    "include": "#declaration-connect"
                 },
                 {
-                    "include": "#declaration-visibility"
+                    "include": "#declaration-port"
+                },
+                {
+                    "include": "#declaration-implement"
                 },
                 {
                     "include": "#declaration-struct"
@@ -278,20 +298,10 @@
                     "include": "#declaration-enum"
                 },
                 {
-                    "include": "#declaration-function-fallback"
-                },
-                {
-                    "include": "#declaration-function-receive"
-                },
-                {
                     "include": "#declaration-function"
                 },
-                
                 {
-                    "include": "#declaration-constructor"
-                },
-                {
-                    "include": "#declaration-modifier"
+                    "include": "#declaration-visibility"
                 }
             ]
         },
@@ -365,14 +375,14 @@
                 }
             }
         },
-        "declaration-interface": {
-            "match": "\\b(interface)(\\s+([A-Za-z_]\\w*))?\\b",
+        "declaration-implement": {
+            "match": "\\b(implement)(\\s+([A-Za-z_]\\w*))?\\b",
             "captures": {
                 "1": {
-                    "name": "storage.type.interface.dml"
+                    "name": "storage.type.implement.dml"
                 },
                 "3": {
-                    "name": "entity.name.type.interface.dml"
+                    "name": "entity.name.type.implement.dml"
                 }
             }
         },
@@ -431,14 +441,14 @@
                 }
             }
         },
-        "declaration-method": {
+        "declaration-function": {
             "begin": "\\b(method)\\s+([A-Za-z_]\\w*)\\b",
             "beginCaptures": {
                 "1": {
-                    "name": "storage.type.method.dml"
+                    "name": "storage.type.function.dml"
                 },
                 "2": {
-                    "name": "entity.name.method.dml"
+                    "name": "entity.name.function.dml"
                 }
             },
             "end": "({)",
@@ -457,12 +467,8 @@
         "declaration-visibility": {
             "patterns": [
                 {
-                    "match": "\\b(private|internal|constant|pure|view|nonpayable|indexed)\\b",
+                    "match": "\\b(constant)\\b",
                     "name": "storage.type.modifier.keyword.dml"
-                },
-                {
-                    "match": "\\b(public|external|payable|inherited|storage|memory|calldata)\\b",
-                    "name": "storage.type.modifier.keyword.extendedscope.dml"
                 }
             ]
         },
