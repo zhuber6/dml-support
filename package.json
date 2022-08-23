@@ -1,8 +1,9 @@
 {
   "name": "dml-support",
   "displayName": "dml-support",
-  "description": "DML language support from Windriver's Simics",
-  "version": "0.0.1",
+  "description": "DML language support for Windriver's Simics",
+  "version": "1.0.0",
+  "publisher": "zhuber6",
   "engines": {
     "vscode": "^1.70.0"
   },
@@ -21,5 +22,9 @@
       "scopeName": "source.dml",
       "path": "./syntaxes/dml.tmLanguage.json"
     }]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:zhuber6/dml-support.git"
   }
 }
